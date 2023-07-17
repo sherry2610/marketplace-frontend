@@ -51,6 +51,9 @@ export default defineConfig({
   //     },
   //   },
   // },
+  define: {
+    'process.env': process.env
+  },
   resolve: {
     alias: {
       Components: path.resolve(dirname, "./src/shared/components"),
