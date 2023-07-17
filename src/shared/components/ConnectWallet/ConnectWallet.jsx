@@ -2,9 +2,13 @@ import { WalletConnectSingleShip } from "Assets/images";
 import { CoinbaseLogo, MetamaskLogo, WalletConnectLogo } from "Assets/svgs";
 // import { Button } from "Components/Button";
 // import { Input } from "Components/Input";
+
+import { useWeb3React } from '@web3-react/core'
+import { connectors } from "./connectors";
 import React from "react";
 
 export const ConnectWallet = () => {
+  const { activate, deactivate } = useWeb3React();
   return (
     <div className="w-full h-fit pb-5 mb-5 md:h-[691px] bg-zinc-800 justify-start items-center md:gap-[60px] flex md:flex-row flex-col">
       <div className="w-full md:w-1/2">
@@ -22,19 +26,20 @@ export const ConnectWallet = () => {
           </div>
 
           {/*  */}
-          <div className="w-full py-5 md:py-0 md:w-80 h-[72px] pl-10 pr-5 bg-neutral-700 rounded-2xl border border-purple-500 justify-start items-center gap-5 inline-flex">
-            <div className="w-10 h-10 justify-center items-center flex">
-              <div className="w-10 h-10 relative flex-col justify-start items-start flex">
-                <div className="w-10 h-[37.08px] relative">
-                  <img src={MetamaskLogo} alt="" />
+          <button onClick={() => { activate(connectors.injected) }}>
+            <div className="w-full py-5 md:py-0 md:w-80 h-[72px] pl-10 pr-5 bg-neutral-700 rounded-2xl border border-purple-500 justify-start items-center gap-5 inline-flex">
+              <div className="w-10 h-10 justify-center items-center flex">
+                <div className="w-10 h-10 relative flex-col justify-start items-start flex">
+                  <div className="w-10 h-[37.08px] relative">
+                    <img src={MetamaskLogo} alt="" />
+                  </div>
                 </div>
               </div>
+              <div className="grow shrink basis-0 text-white text-[22px] font-semibold capitalize leading-loose">
+                Metamask
+              </div>
             </div>
-            <div className="grow shrink basis-0 text-white text-[22px] font-semibold capitalize leading-loose">
-              Metamask
-            </div>
-          </div>
-
+          </button>
           {/*  */}
           <div className="w-full py-5 md:py-0 md:w-80 h-[72px] pl-10 pr-5 bg-neutral-700 rounded-2xl border border-purple-500 justify-start items-center gap-5 inline-flex">
             <div className="w-10 h-10 justify-center items-center flex">
