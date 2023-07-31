@@ -7,9 +7,12 @@ import {
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import classes from "./Header.module.css";
+import { useWeb3React } from "@web3-react/core";
+import { conciseAddress } from "Root/utils/general";
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
+  const web3context = useWeb3React();
 
   return (
     <div className={`relative `}>
@@ -46,7 +49,9 @@ export const Header = () => {
           className="flex w-full items-center justify-start gap-3 rounded-2xl px-5"
         >
           <div className="text-center text-[16px] font-semibold leading-snug text-white">
-            Connect a wallet
+            {web3context?.active && web3context?.account
+              ? conciseAddress(web3context?.account)
+              : "CONNECT WALLET"}
           </div>
         </Link>
 
@@ -92,7 +97,9 @@ export const Header = () => {
             className="flex w-[174px] items-center justify-center gap-3 rounded-2xl px-5"
           >
             <div className="text-center text-[16px] font-semibold leading-snug text-white">
-              Connect a wallet
+              {web3context?.active && web3context?.account
+                ? conciseAddress(web3context?.account)
+                : "CONNECT WALLET"}
             </div>
           </Link>
 
