@@ -5,14 +5,17 @@ import {
   UserIcon,
 } from "Assets/svgs";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import classes from "./Header.module.css";
 import { useWeb3React } from "@web3-react/core";
 import { conciseAddress } from "Root/utils/general";
+import { useSelector } from "react-redux";
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
   const web3context = useWeb3React();
+  const navigate = useNavigate();
+  const { isWalletConnected } = useSelector((state) => state.appSlice);
 
   return (
     <div className={`relative `}>
@@ -103,8 +106,12 @@ export const Header = () => {
             </div>
           </Link>
 
-          <Link
-            to={`/create-account`}
+          <div
+            onClick={() =>
+              isWalletConnected
+                ? navigate(`/create-account`)
+                : alert("Connect a wallet first")
+            }
             className="cursor-pointer inline-flex h-[60px] w-[152px] items-center justify-center gap-3 rounded-2xl bg-purple-500 px-[30px]"
           >
             <UserIcon />
@@ -112,7 +119,7 @@ export const Header = () => {
             <div className="text-center text-[16px] font-semibold leading-snug text-white hover:text-white">
               Sign Up
             </div>
-          </Link>
+          </div>
         </div>
         <div
           onClick={() => setOpen((prev) => !prev)}

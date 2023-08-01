@@ -3,6 +3,8 @@ import React from "react";
 // import { HomeScreen as App } from "./shared/containers/Home";
 import App from "./app/App";
 import { createRoot } from "react-dom/client";
+import { store } from "./redux/store";
+import { Provider } from "react-redux";
 
 import "./output.css";
 import "./index.css";
@@ -16,6 +18,8 @@ import "@fontsource/work-sans/400-italic.css"; // Specify weight and style
 const root = createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>
 );

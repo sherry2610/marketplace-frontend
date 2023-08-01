@@ -12,21 +12,24 @@ import {
   UserRejectedRequestError,
 } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
+import { injected } from "Root/utils/web3Connectors";
+import {
+  resetAppSlice,
+  setIsIWalletConnected,
+  setUser,
+} from "Root/redux/slices/appSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export const ConnectWallet = () => {
-  const { activate, deactivate } = useWeb3React();
-
+  const { activate, deactivate, account } = useWeb3React();
   const web3context = useWeb3React();
+  const dispatch = useDispatch();
 
-  const onSuccess = () => {
-    console.log("web3context on success", web3context);
-  };
-
-  console.log(
-    "xxxx => ",
-    web3context?.connector instanceof WalletConnectConnector,
-    web3context?.connector instanceof InjectedConnector
-  );
+  useEffect(() => {
+    if (account) {
+      dispatch(setUser({ address: account }));
+    }
+  }, [account]);
 
   const deactivateWallet = async () => {
     await web3context.deactivate();
@@ -35,9 +38,10 @@ export const ConnectWallet = () => {
       await web3context.connector.close();
     }
 
-    dispatch(setActiveTrustWallet(false));
+    dispatch(setIsIWalletConnected(false));
 
-    onSuccess();
+    dispatch(resetAppSlice());
+    // dispatch(setActiveTrustWallet(false));
   };
 
   const getErrorMessage = (e) => {
@@ -58,7 +62,8 @@ export const ConnectWallet = () => {
   };
 
   const activateWallet = useCallback(
-    (connector, onClose = () => {}) => {
+    async (connector, onClose = () => {}) => {
+      console.log("started", connector);
       if (
         connector instanceof WalletConnectConnector &&
         connector.walletConnectProvider?.wc?.uri
@@ -66,7 +71,7 @@ export const ConnectWallet = () => {
         connector.walletConnectProvider = undefined;
       }
 
-      web3context
+      await web3context
         .activate(
           connector
             ? connector
@@ -80,14 +85,14 @@ export const ConnectWallet = () => {
           //   setLoadingF({ walletConnection: false });
           //getJWTF(web3context.account, Date.now());
 
-          console.log("activateWallet connector => ", { connector, res });
-
-          onSuccess();
+          dispatch(setIsIWalletConnected(true));
         })
         .catch((e) => {
           const err = getErrorMessage(e);
+          console.log("error from method", err);
+          alert(err);
           // showSnackbarF({ message: err, severity: "error" });
-          console.error("ERROR activateWallet -> ", e);
+          console.log("ERROR activateWallet -> ", e);
           //   setLoadingF({ walletConnection: false });
         });
     },
@@ -118,8 +123,6 @@ export const ConnectWallet = () => {
           //getJWTF(web3context.account, Date.now());
 
           console.log("activateWallet connector => ", { connector, res });
-          // dispatch(setActiveTrustWallet(true));
-          onSuccess();
         })
         .catch((e) => {
           const err = getErrorMessage(e);
@@ -150,7 +153,11 @@ export const ConnectWallet = () => {
           {/*  */}
           <button
             onClick={() => {
-              activate(connectors.injected);
+              // activate(connectors.injected);
+              !web3context.active &&
+              !(web3context?.connector instanceof InjectedConnector)
+                ? activateWallet(injected)
+                : deactivateWallet();
             }}
           >
             <div className="w-full py-5 md:py-0 md:w-80 h-[72px] pl-10 pr-5 bg-neutral-700 rounded-2xl border border-purple-500 justify-start items-center gap-5 inline-flex">

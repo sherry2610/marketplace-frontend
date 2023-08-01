@@ -2,9 +2,26 @@ import { SpaceShipPurpleShade } from "Assets/images";
 import { EnvelopeSimple, LockKey, UserIcon } from "Assets/svgs";
 import { Button } from "Components/Button";
 import { Input } from "Components/Input";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import SignUp from "./components/SignUp";
+import SignIn from "./components/SignIn";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 
 export const CreateAccount = () => {
+  const navigate = useNavigate();
+  const [formView, setFormView] = useState("signup");
+  const {
+    isWalletConnected,
+    user: { address },
+  } = useSelector((state) => state.appSlice);
+
+  useEffect(() => {
+    if (!isWalletConnected || !address) {
+      navigate("/connect-wallet");
+    }
+  }, []);
+
   return (
     <div className="w-full mb-5 pb-5 h-fit md:h-[691px] bg-zinc-800 justify-start items-center md:gap-[60px] flex md:flex-row flex-col">
       <div className="w-full md:w-1/2">
@@ -22,43 +39,24 @@ export const CreateAccount = () => {
           </div>
 
           {/*  */}
-          <form className="w-full h-fit flex-col justify-center gap-5 items-start inline-flex">
-            <div className="w-full md:w-[330px] h-[46px]">
-              <Input
-                placeholder={"Username"}
-                icon={<UserIcon pathFill="#BDBDBD" />}
-              />
-            </div>
-            <div className="w-full md:w-[330px] h-[46px]">
-              <Input
-                placeholder={"Email Address"}
-                icon={<EnvelopeSimple pathFill="#BDBDBD" />}
-              />
-            </div>
-            <div className="w-full md:w-[330px] h-[46px]">
-              <Input
-                placeholder={"Password"}
-                icon={
-                  <LockKey className={`h-full w-full`} pathFill="#BDBDBD" />
-                }
-              />
-            </div>
-            <div className="w-full md:w-[330px] h-[46px]">
-              <Input
-                placeholder={"Confirm Password"}
-                icon={
-                  <LockKey className={`h-full w-full`} pathFill="#BDBDBD" />
-                }
-              />
-            </div>
-            <Button
-              className={`w-full md:w-[330px] h-[46px] px-[50px] bg-purple-500 rounded-2xl justify-center items-center gap-3 inline-flex`}
+
+          {formView === "signup" ? <SignUp /> : <SignIn />}
+
+          <div className="w-full text-white text-[16px] font-normal capitalize leading-9">
+            {formView === "signup"
+              ? "Already have an account."
+              : "Don't have an account."}{" "}
+            <span
+              className="w-full text-purple-500 text-[16px] font-normal capitalize cursor-pointer"
+              onClick={() =>
+                formView === "signup"
+                  ? setFormView("signin")
+                  : setFormView("signup")
+              }
             >
-              <div className="text-center text-white text-[16px] font-semibold leading-snug">
-                Create account
-              </div>
-            </Button>
-          </form>
+              {formView === "signup" ? "Sign In" : "Sign Up"}
+            </span>
+          </div>
         </div>
       </div>
     </div>
