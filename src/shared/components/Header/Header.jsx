@@ -51,7 +51,7 @@ export const Header = () => {
           <div className="text-center text-[16px] font-semibold leading-snug text-white">
             {web3context?.active && web3context?.account
               ? conciseAddress(web3context?.account)
-              : "CONNECT WALLET"}
+              : "Connect a wallet"}
           </div>
         </Link>
 
@@ -99,7 +99,7 @@ export const Header = () => {
             <div className="text-center text-[16px] font-semibold leading-snug text-white">
               {web3context?.active && web3context?.account
                 ? conciseAddress(web3context?.account)
-                : "CONNECT WALLET"}
+                : "Connect a wallet"}
             </div>
           </Link>
 
