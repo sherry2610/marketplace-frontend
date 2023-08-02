@@ -15,7 +15,7 @@ export const Input = ({
           type={type}
           placeholder={placeholder}
           value={value}
-          onChange={(e) => onChange(e)}
+          onChange={(e) => onChange(e.target.value)}
           className={`w-full h-full border-none outline-none focus:outline-none focus:ring-white`}
         />
       </div>

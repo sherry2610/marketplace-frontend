@@ -23,7 +23,7 @@ export const CreateAccount = () => {
   }, []);
 
   return (
-    <div className="w-full mb-5 pb-5 h-fit md:h-[691px] bg-zinc-800 justify-start items-center md:gap-[60px] flex md:flex-row flex-col">
+    <div className="w-full mb-5 pb-5 h-fit bg-zinc-800 justify-start items-center md:gap-[60px] flex md:flex-row flex-col">
       <div className="w-full md:w-1/2">
         <img className="w-full h-[691px]" src={SpaceShipPurpleShade} />
       </div>

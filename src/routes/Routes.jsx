@@ -10,6 +10,10 @@ import {
   ArtistPage,
   NFTPage,
 } from "./LazyLoad";
+import { useDispatch } from "react-redux";
+import { useWeb3React } from "@web3-react/core";
+import { useEffect } from "react";
+import { setUser } from "Root/redux/slices/appSlice";
 
 const HomeScreen = () => (
   <ScreenWrapper>
@@ -48,6 +52,13 @@ const NFTScreen = () => (
 );
 
 export function MainRoutes() {
+  const dispatch = useDispatch();
+  const { account } = useWeb3React();
+  useEffect(() => {
+    if (account) {
+      dispatch(setUser({ address: account }));
+    }
+  }, [account]);
   return (
     <>
       <Routes>

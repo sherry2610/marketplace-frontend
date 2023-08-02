@@ -10,8 +10,9 @@ import { BrowserRouter } from "react-router-dom";
 
 // Create the store
 // const store = setupStore();
-import { Web3ReactProvider } from '@web3-react/core'
+import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
+import Toast from "Components/Toast";
 
 function getLibrary(provider) {
   return new Web3Provider(provider);
@@ -22,13 +23,14 @@ function App() {
       {/* // <Provider store={store}> */}
       {/* <UserProvider>
         <CoreProvider> */}
-      
-        <BrowserRouter>
-          <Web3ReactProvider getLibrary={getLibrary}>
-            <MainRoutes />
-          </Web3ReactProvider>
-        </BrowserRouter>
-      
+
+      <BrowserRouter>
+        <Web3ReactProvider getLibrary={getLibrary}>
+          <Toast />
+          <MainRoutes />
+        </Web3ReactProvider>
+      </BrowserRouter>
+
       {/* </CoreProvider>
       </UserProvider> */}
       {/* // </Provider> */}

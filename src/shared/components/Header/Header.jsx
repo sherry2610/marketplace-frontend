@@ -4,18 +4,36 @@ import {
   StoreFrontIcon,
   UserIcon,
 } from "Assets/svgs";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import classes from "./Header.module.css";
 import { useWeb3React } from "@web3-react/core";
 import { conciseAddress } from "Root/utils/general";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { BASE_URL } from "Root/constants";
+import fetchWrapper from "Root/utils/fetchWrapper";
+import { logout } from "Root/redux/slices/appSlice";
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
   const web3context = useWeb3React();
   const navigate = useNavigate();
-  const { isWalletConnected } = useSelector((state) => state.appSlice);
+  const dispatch = useDispatch();
+  const { isWalletConnected, isLoggedIn } = useSelector(
+    (state) => state.appSlice
+  );
+
+  const handleLogout = () => {
+    window.localStorage.setItem("acccessToken", "");
+    dispatch(logout());
+  };
+
+  useEffect(() => {
+    (async () => {
+      let abc = await fetchWrapper(`${BASE_URL}auth`);
+      console.log("abc looking", abc);
+    })();
+  }, []);
 
   return (
     <div className={`relative `}>
@@ -109,7 +127,9 @@ export const Header = () => {
           <div
             onClick={() =>
               isWalletConnected
-                ? navigate(`/create-account`)
+                ? isLoggedIn
+                  ? handleLogout()
+                  : navigate(`/create-account`)
                 : alert("Connect a wallet first")
             }
             className="cursor-pointer inline-flex h-[60px] w-[152px] items-center justify-center gap-3 rounded-2xl bg-purple-500 px-[30px]"
@@ -117,7 +137,7 @@ export const Header = () => {
             <UserIcon />
 
             <div className="text-center text-[16px] font-semibold leading-snug text-white hover:text-white">
-              Sign Up
+              {isLoggedIn ? "Logout" : "Sign Up"}
             </div>
           </div>
         </div>

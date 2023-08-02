@@ -36,11 +36,26 @@ export const appSlice = createSlice({
       state.isLoggedIn = false;
       state.isWalletConnected = false;
     },
+    logout: (state) => {
+      state.user = {
+        ...state.user,
+        profile: {
+          email: "",
+          name: "",
+        },
+      };
+      state.isLoggedIn = false;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setIsILoggedIn, setIsIWalletConnected, setUser, resetAppSlice } =
-  appSlice.actions;
+export const {
+  setIsILoggedIn,
+  setIsIWalletConnected,
+  setUser,
+  resetAppSlice,
+  logout,
+} = appSlice.actions;
 
 export default appSlice.reducer;
