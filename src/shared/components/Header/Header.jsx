@@ -10,9 +10,10 @@ import classes from "./Header.module.css";
 import { useWeb3React } from "@web3-react/core";
 import { conciseAddress } from "Root/utils/general";
 import { useDispatch, useSelector } from "react-redux";
-import { BASE_URL } from "Root/constants";
+import { BASE_URL, SUCCESS_ICON, WARNING_ICON } from "Root/constants";
 import fetchWrapper from "Root/utils/fetchWrapper";
 import { logout } from "Root/redux/slices/appSlice";
+import { setToastData } from "Root/redux/slices/uiSlice";
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
@@ -28,12 +29,32 @@ export const Header = () => {
     dispatch(logout());
   };
 
-  useEffect(() => {
-    (async () => {
-      let abc = await fetchWrapper(`${BASE_URL}auth`);
-      console.log("abc looking", abc);
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     let abc = await fetchWrapper(`${BASE_URL}auth`);
+  //     console.log("abc looking", abc);
+  //   })();
+  // }, []);
+
+  const handleNotConnected = () => {
+    dispatch(
+      setToastData({
+        icon: WARNING_ICON,
+        toastMessage: "Connect a wallet first!",
+        openToast: true,
+      })
+    );
+
+    setTimeout(() => {
+      dispatch(
+        setToastData({
+          icon: SUCCESS_ICON,
+          toastMessage: "Account created successfully!",
+          openToast: false,
+        })
+      );
+    }, 3000);
+  };
 
   return (
     <div className={`relative `}>
@@ -130,7 +151,7 @@ export const Header = () => {
                 ? isLoggedIn
                   ? handleLogout()
                   : navigate(`/create-account`)
-                : alert("Connect a wallet first")
+                : handleNotConnected()
             }
             className="cursor-pointer inline-flex h-[60px] w-[152px] items-center justify-center gap-3 rounded-2xl bg-purple-500 px-[30px]"
           >

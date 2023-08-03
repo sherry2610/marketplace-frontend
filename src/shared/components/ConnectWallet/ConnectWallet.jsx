@@ -19,6 +19,8 @@ import {
   setUser,
 } from "Root/redux/slices/appSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { SUCCESS_ICON, WARNING_ICON } from "Root/constants";
+import { setToastData } from "Root/redux/slices/uiSlice";
 
 export const ConnectWallet = () => {
   const { activate, deactivate, account } = useWeb3React();
@@ -61,6 +63,26 @@ export const ConnectWallet = () => {
     }
   };
 
+  const handleMessagesOnToast = (msg) => {
+    dispatch(
+      setToastData({
+        icon: WARNING_ICON,
+        toastMessage: msg,
+        openToast: true,
+      })
+    );
+
+    setTimeout(() => {
+      dispatch(
+        setToastData({
+          icon: SUCCESS_ICON,
+          toastMessage: "Account created successfully!",
+          openToast: false,
+        })
+      );
+    }, 3000);
+  };
+
   const activateWallet = useCallback(
     async (connector, onClose = () => {}) => {
       console.log("started", connector);
@@ -90,7 +112,9 @@ export const ConnectWallet = () => {
         .catch((e) => {
           const err = getErrorMessage(e);
           console.log("error from method", err);
-          alert(err);
+          // alert(err);
+          handleMessagesOnToast(err);
+
           // showSnackbarF({ message: err, severity: "error" });
           console.log("ERROR activateWallet -> ", e);
           //   setLoadingF({ walletConnection: false });
