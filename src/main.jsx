@@ -15,6 +15,8 @@ import "@fontsource/work-sans/400-italic.css"; // Specify weight and style
 // ReactDOM.createRoot(document.getElementById("root")).render(
 // );
 
+console.log = () => {};
+
 const root = createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
