@@ -1,4 +1,4 @@
-export default async (route, body, method = false) => {
+export default async (route, body, method = false, token = false) => {
   // console.log(route, method, body);
 
   const headers = {
@@ -10,9 +10,9 @@ export default async (route, body, method = false) => {
 
   //   // console.log('token => ', token);
 
-  //   if (token) {
-  //     headers['Authorization'] = `Bearer ${token}`;
-  //   }
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
 
   //   console.log('Headers => ', headers, route);
   // }

@@ -47,13 +47,7 @@ const SignIn = () => {
       setLoading(false);
       if (payload?.email) {
         dispatch(
-          setUser({
-            profile: {
-              email: payload?.email,
-              name: payload?.name,
-              collections: payload?.collections,
-            },
-          })
+          setUser({ profile: { email: payload?.email, name: payload?.name } })
         );
         window.localStorage.setItem("accessToken", payload?.accessToken);
         dispatch(setIsILoggedIn(true));

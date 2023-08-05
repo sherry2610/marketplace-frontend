@@ -14,10 +14,13 @@ import { BASE_URL, SUCCESS_ICON, WARNING_ICON } from "Root/constants";
 import fetchWrapper from "Root/utils/fetchWrapper";
 import { logout } from "Root/redux/slices/appSlice";
 import { setToastData } from "Root/redux/slices/uiSlice";
+import { useAddress, useMetamask } from "@thirdweb-dev/react";
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
-  const web3context = useWeb3React();
+  // const web3context = useWeb3React();
+  const address = useAddress();
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isWalletConnected, isLoggedIn } = useSelector(
@@ -27,6 +30,7 @@ export const Header = () => {
   const handleLogout = () => {
     window.localStorage.setItem("acccessToken", "");
     dispatch(logout());
+    navigate("/");
   };
 
   // useEffect(() => {
@@ -55,7 +59,6 @@ export const Header = () => {
       );
     }, 3000);
   };
-
   return (
     <div className={`relative `}>
       <div
@@ -91,9 +94,7 @@ export const Header = () => {
           className="flex w-full items-center justify-start gap-3 rounded-2xl px-5"
         >
           <div className="text-center text-[16px] font-semibold leading-snug text-white">
-            {web3context?.active && web3context?.account
-              ? conciseAddress(web3context?.account)
-              : "Connect a wallet"}
+            {address ? conciseAddress(address) : "Connect a wallet"}
           </div>
         </Link>
 
@@ -139,11 +140,20 @@ export const Header = () => {
             className="flex w-[174px] items-center justify-center gap-3 rounded-2xl px-5"
           >
             <div className="text-center text-[16px] font-semibold leading-snug text-white">
-              {web3context?.active && web3context?.account
-                ? conciseAddress(web3context?.account)
-                : "Connect a wallet"}
+              {address ? conciseAddress(address) : "Connect a wallet"}
             </div>
           </Link>
+
+          {isWalletConnected && isLoggedIn && address && (
+            <Link
+              to={`/user-profile`}
+              className="flex w-[174px] items-center justify-center gap-3 rounded-2xl px-5"
+            >
+              <div className="text-center text-[16px] font-semibold leading-snug text-white">
+                User Profile
+              </div>
+            </Link>
+          )}
 
           <div
             onClick={() =>

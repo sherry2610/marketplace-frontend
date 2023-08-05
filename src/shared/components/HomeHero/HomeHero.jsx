@@ -3,9 +3,15 @@
 import { RocketLaunchIcon } from "Assets/svgs";
 import { AnimakidImg, HeroImage } from "Assets/images";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 // import { Button } from "Components/Button";
 
 export const HomeHero = () => {
+  const {
+    isWalletConnected,
+    isLoggedIn,
+    user: { address },
+  } = useSelector((state) => state.appSlice);
   return (
     <div className="flex md:flex-col lg:flex-row flex-col h-fit w-full items-start justify-start gap-[30px] bg-zinc-800 py-[80px]">
       <div
@@ -20,7 +26,11 @@ export const HomeHero = () => {
           NFT marketplace for whitelabel solution
         </div>
         <Link
-          to={`/create-account`}
+          to={
+            isWalletConnected && isLoggedIn
+              ? `create-nft-collection`
+              : `/create-account`
+          }
           className={`flex h-[60px] w-fit min-w-[250px] gap-[12px] rounded-[20px] bg-purple-500 justify-center items-center text-white hover:text-white`}
         >
           <RocketLaunchIcon />

@@ -6,6 +6,7 @@ const initialState = {
     profile: {
       email: "",
       name: "",
+      collections: [],
     },
   },
   isLoggedIn: false,
@@ -42,6 +43,7 @@ export const appSlice = createSlice({
         profile: {
           email: "",
           name: "",
+          collections: [],
         },
       };
       state.isLoggedIn = false;

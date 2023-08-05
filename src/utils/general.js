@@ -32,3 +32,19 @@ export const GetIcon = (iconName) => {
   }
   return Icon;
 };
+
+export const getNetworkName = (chainId) => {
+  let Icon = "mumbai";
+  switch (chainId) {
+    case "137":
+      Icon = "polygon";
+      break;
+    case "80001":
+      Icon = "mumbai";
+      break;
+    default:
+      Icon = "mumbai";
+      break;
+  }
+  return Icon;
+};

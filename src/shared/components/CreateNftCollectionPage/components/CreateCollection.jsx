@@ -1,3 +1,8 @@
+import {
+  ThirdwebSDK,
+  getSignerAndProvider,
+  useAddress,
+} from "@thirdweb-dev/react";
 import { EnvelopeSimple, LockKey, UserIcon } from "Assets/svgs";
 import { Button } from "Components/Button";
 import { Input } from "Components/Input";
@@ -8,64 +13,100 @@ import { BASE_URL, ERROR_ICON, SUCCESS_ICON } from "Root/constants";
 import { setIsILoggedIn, setUser } from "Root/redux/slices/appSlice";
 import { setToastData } from "Root/redux/slices/uiSlice";
 import fetchWrapper from "Root/utils/fetchWrapper";
+import { ethers } from "ethers";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 
 const initialData = {
-  username: "",
-  email: "",
-  password: "",
-  confirmPassword: "",
+  contractName: "",
+  description: "",
+  symbol: "",
+  imageUrl: "",
 };
 
-const SignUp = () => {
+const CreateCollection = () => {
+  const addressFromThirdWeb = useAddress();
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  // getSignerAndProvider()
   const {
     isWalletConnected,
-    user: { address },
+    user: {
+      address,
+      profile: { email },
+    },
   } = useSelector((state) => state.appSlice);
+
+  const accessToken = localStorage.getItem("accessToken");
+
+  console.log("email access", { email, accessToken });
 
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState(initialData);
-  const { username, email, password, confirmPassword } = formData;
-  const [passwordError, setPasswordError] = useState("");
-  const [passwordMismatchError, setPasswordMismatchError] = useState("");
+  const { contractName, description, symbol, imageUrl } = formData;
+  // const [passwordError, setPasswordError] = useState("");
+  // const [passwordMismatchError, setPasswordMismatchError] = useState("");
 
   const handleChange = (value, key) => {
     setFormData({ ...formData, [key]: value });
-    if (confirmPassword === password) setPasswordMismatchError("");
-    if (password.length >= 8) setPasswordError("");
-    if (key === "password") {
-      value.length < 8 &&
-        setPasswordError("Password length should be atleast 8!");
-    }
-    if (key === "confirmPassword") {
-      console.log("password !== value", password, value, password !== value);
-      if (password !== value) {
-        setPasswordMismatchError("Password did not matched!");
-      } else {
-        setPasswordMismatchError("");
-      }
-    }
   };
 
   const onSubmit = async () => {
     try {
       setLoading(true);
-      let signupPayload = {
-        address,
-        name: username,
+      let contractPayload = {
+        // Required parameters
+        name: contractName, // Name of the contract
+        primary_sale_recipient: address, // Wallet address to receive funds from sales
+        voting_token_address: "0x00", // Only used for Vote
+
+        // Optional metadata
+        // app_uri: "https://example.com", // Website of your contract dApp
+        description: description, // Description of your contract
+        // external_link: "https://example.com", // External link to view contract info on your website
+        symbol: symbol, // Symbol of the contract tokens
+        image: imageUrl, // Image to use for the contract
+      };
+
+      console.log("contractPayload", contractPayload);
+
+      const signer = await new ethers.providers.Web3Provider(
+        window.ethereum
+      ).getSigner();
+
+      const sdk = await ThirdwebSDK.fromSigner(signer, "mumbai", {
+        clientId: import.meta.env.VITE_CLIENT_ID, // Use client id if using on the client side, get it from dashboard settings
+        secretKey: import.meta.env.VITE_SECRET_KEY, // Use secret key if using on the server, get it from dashboard settings
+      });
+
+      const txResult = await sdk.deployer.deployBuiltInContract(
+        "nft-collection",
+        contractPayload
+      );
+
+      console.log("txResult", txResult);
+
+      let editProfilePayload = {
         email,
-        password,
+        collections: [txResult],
       };
       let { payload } = await fetchWrapper(
-        `${BASE_URL}auth/signup`,
-        signupPayload,
-        "post"
+        `${BASE_URL}edit-profile`,
+        editProfilePayload,
+        "post",
+        accessToken
       );
-      setLoading(false);
+
+      console.log("sdk", sdk);
+
+      // let { payload } = await fetchWrapper(
+      //   `${BASE_URL}auth/signup`,
+      //   signupPayload,
+      //   "post"
+      // );
+      // setLoading(false);
       if (payload?.email) {
         dispatch(
           setUser({
@@ -76,12 +117,12 @@ const SignUp = () => {
             },
           })
         );
-        window.localStorage.setItem("accessToken", payload?.accessToken);
-        dispatch(setIsILoggedIn(true));
+        // window.localStorage.setItem("accessToken", payload?.accessToken);
+        // dispatch(setIsILoggedIn(true));
         dispatch(
           setToastData({
             icon: SUCCESS_ICON,
-            toastMessage: "Account created successfully!",
+            toastMessage: "Collection created successfully!",
             openToast: true,
           })
         );
@@ -116,70 +157,56 @@ const SignUp = () => {
           );
         }, 3000);
       }
+      setLoading(false);
     } catch (e) {
       setLoading(false);
       console.log("error on submit", e);
     }
   };
 
-  console.log("formData", formData, address);
+  console.log("addressFromThirdWeb", addressFromThirdWeb);
 
   return (
     <form className="w-full h-fit flex-col justify-center gap-5 items-start inline-flex">
       <div className="w-full md:w-[330px] h-[46px]  mb-4">
         <Input
-          placeholder={"Username"}
-          value={username}
-          onChange={(val) => handleChange(val, "username")}
+          placeholder={"contract name"}
+          value={contractName}
+          onChange={(val) => handleChange(val, "contractName")}
           icon={<UserIcon pathFill="#BDBDBD" />}
         />
       </div>
       <div className="w-full md:w-[330px] h-[46px] mb-4">
         <Input
-          placeholder={"Email Address"}
+          placeholder={"description"}
           type="email"
-          value={email}
-          onChange={(val) => handleChange(val, "email")}
+          value={description}
+          onChange={(val) => handleChange(val, "description")}
           icon={<EnvelopeSimple pathFill="#BDBDBD" />}
         />
       </div>
       <div className="w-full md:w-[330px] h-[46px] mb-4">
         <Input
-          placeholder={"Password"}
-          type="password"
-          value={password}
-          onChange={(val) => handleChange(val, "password")}
+          placeholder={"symbol"}
+          type="text"
+          value={symbol}
+          onChange={(val) => handleChange(val, "symbol")}
           icon={<LockKey className={`h-full w-full`} pathFill="#BDBDBD" />}
         />
-        {passwordError && (
-          <span className="w-full text-red-500 text-[12px] font-normal capitalize leading-9">
-            {passwordError}
-          </span>
-        )}
       </div>
       <div className="w-full md:w-[330px] h-[46px]  mb-4">
         <Input
-          placeholder={"Confirm Password"}
-          type="password"
-          value={confirmPassword}
-          onChange={(val) => handleChange(val, "confirmPassword")}
+          placeholder={"image url"}
+          type="text"
+          value={imageUrl}
+          onChange={(val) => handleChange(val, "imageUrl")}
           icon={<LockKey className={`h-full w-full`} pathFill="#BDBDBD" />}
         />
-        {passwordMismatchError && (
-          <div className="w-full text-red-500 text-[12px] font-normal capitalize leading-9">
-            {passwordMismatchError}
-          </div>
-        )}
       </div>
       <Button
         className={`w-full md:w-[330px] h-[46px] px-[50px] bg-purple-500 rounded-2xl justify-center items-center gap-3 inline-flex disabled:bg-slate-300`}
         disabled={
-          !username ||
-          !email ||
-          !password ||
-          !confirmPassword ||
-          password !== confirmPassword ||
-          loading
+          !contractName || !symbol || !description || !imageUrl || loading
         }
         onClick={() => onSubmit()}
       >
@@ -187,7 +214,7 @@ const SignUp = () => {
           <Spinner />
         ) : (
           <div className="text-center text-white text-[16px] font-semibold leading-snug">
-            Create account
+            Create collection
           </div>
         )}
       </Button>
@@ -195,4 +222,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default CreateCollection;
