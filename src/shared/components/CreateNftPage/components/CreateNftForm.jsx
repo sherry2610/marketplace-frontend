@@ -31,9 +31,9 @@ const readOnlySdk = new ThirdwebSDK("mumbai", {
   secretKey: import.meta.env.VITE_SECRET_KEY, // Use secret key if using on the server, get it from dashboard settings
 });
 
-const provider = new ethers.providers.JsonRpcProvider(
-  "https://polygon-mumbai.infura.io/v3/4458cf4d1689497b9a38b1d6bbf05e78"
-);
+// const provider = new ethers.providers.JsonRpcProvider(
+//   "https://polygon-mumbai.infura.io/v3/4458cf4d1689497b9a38b1d6bbf05e78"
+// );
 
 const CreateNftForm = () => {
   const addressFromThirdWeb = useAddress();
@@ -109,10 +109,10 @@ const CreateNftForm = () => {
       };
       console.log("mark2", { metadata, address });
 
-      // const signer = await new ethers.providers.Web3Provider(
-      //   window.ethereum
-      // ).getSigner();
-      const signer = await provider.getSigner(address);
+      const signer = await new ethers.providers.Web3Provider(
+        window.ethereum
+      ).getSigner();
+      // const signer = await provider.getSigner(address);
       console.log("mark3", signer);
       const sdk = await ThirdwebSDK.fromSigner(signer, "mumbai", {
         clientId: import.meta.env.VITE_CLIENT_ID, // Use client id if using on the client side, get it from dashboard settings
@@ -121,7 +121,7 @@ const CreateNftForm = () => {
       console.log("mark4", sdk);
       const contract = await sdk.getContract(contractAddress);
       console.log("mark5", contract);
-      const txResult = await contract.erc721.mint(metadata);
+      const txResult = await contract?.erc721?.mint(metadata);
       console.log("mark6", txResult);
 
       console.log("txResult", txResult);
