@@ -19,7 +19,7 @@ let persistor = persistStore(store);
 // ReactDOM.createRoot(document.getElementById("root")).render(
 // );
 
-// console.log = () => {};
+console.log = () => {};
 
 const root = createRoot(document.getElementById("root"));
 root.render(
