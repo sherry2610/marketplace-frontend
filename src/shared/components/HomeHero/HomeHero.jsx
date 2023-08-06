@@ -7,11 +7,9 @@ import { useSelector } from "react-redux";
 // import { Button } from "Components/Button";
 
 export const HomeHero = () => {
-  const {
-    isWalletConnected,
-    isLoggedIn,
-    user: { address },
-  } = useSelector((state) => state.appSlice);
+  const { isWalletConnected, isLoggedIn } = useSelector(
+    (state) => state.appSlice
+  );
   return (
     <div className="flex md:flex-col lg:flex-row flex-col h-fit w-full items-start justify-start gap-[30px] bg-zinc-800 py-[80px]">
       <div

@@ -91,7 +91,9 @@ export function MainRoutes() {
     <>
       <ThirdwebProvider
         activeChain={"mumbai"}
-        signer={new ethers.providers.Web3Provider(window.ethereum).getSigner()}
+        // signer={
+        //   new ethers.providers.Web3Provider(window.ethereum).getSigner() || {}
+        // }
         supportedWallets={[metamaskWallet()]}
         clientId={import.meta.env.VITE_CLIENT_ID}
       >
