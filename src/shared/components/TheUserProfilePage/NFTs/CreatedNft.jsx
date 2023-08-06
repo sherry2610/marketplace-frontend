@@ -1,13 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export const NFTCard = ({
+export const CreatedNFTCard = ({
   artistName,
   artistAvatar,
   NFTImage,
   NFTName,
-  price,
-  highestBid,
 }) => {
   return (
     <Link
@@ -33,24 +31,6 @@ export const NFTCard = ({
             </div>
             <div className="grow shrink basis-0 text-white text-[16px] font-normal leading-snug">
               {artistName}
-            </div>
-          </div>
-        </div>
-        <div className="self-stretch justify-start items-start hidden">
-          <div className="grow shrink basis-0 pr-[21px] flex-col justify-start items-start gap-2 inline-flex">
-            <div className="self-stretch text-zinc-500 text-[12px] font-normal leading-3">
-              Price
-            </div>
-            <div className="self-stretch text-white text-[16px] font-normal leading-snug">
-              {price}
-            </div>
-          </div>
-          <div className="grow shrink basis-0 flex-col justify-center items-end gap-2 inline-flex">
-            <div className="self-stretch text-right text-zinc-500 text-[12px] font-normal leading-3">
-              Highest Bid
-            </div>
-            <div className="self-stretch text-right text-white text-[16px] font-normal leading-snug">
-              {highestBid}
             </div>
           </div>
         </div>

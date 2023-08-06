@@ -11,6 +11,7 @@ import {
   NFTPage,
   UserProfile,
   CreateNftCollection,
+  CreateNft,
 } from "./LazyLoad";
 import { useDispatch } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
@@ -67,6 +68,12 @@ const CreateNftCollectionPage = () => (
   </ScreenWrapper>
 );
 
+const CreateNftPage = () => (
+  <ScreenWrapper>
+    <CreateNft />
+  </ScreenWrapper>
+);
+
 export function MainRoutes() {
   const dispatch = useDispatch();
   const { account, chainId } = useWeb3React();
@@ -95,6 +102,7 @@ export function MainRoutes() {
             path="/create-nft-collection"
             element={<CreateNftCollectionPage />}
           />
+          <Route path="/create-nft" element={<CreateNftPage />} />
 
           <Route path="/connect-wallet" element={<WalletConnectScreen />} />
           <Route path="/rankings" element={<ArtistRankingScreen />} />

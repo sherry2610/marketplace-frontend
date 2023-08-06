@@ -37,7 +37,7 @@ export const TheArtistPage = () => {
         />
       </div>
       <div>
-        {currentTab === tabs[tabMap.Created] ? <Collections /> : null}
+        {currentTab === tabs[tabMap.Created] ? <NFTs /> : null}
         {currentTab === tabs[tabMap.Owned] ? <NFTs /> : null}
         {currentTab === tabs[tabMap.Collections] ? <Collections /> : null}
       </div>

@@ -52,6 +52,7 @@ const SignIn = () => {
               email: payload?.email,
               name: payload?.name,
               collections: payload?.collections,
+              nfts: payload?.nfts,
             },
           })
         );

@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 export const ArtistTab = ({ name, currentTab, setCurrentTab }) => {
   const {
     user: {
-      profile: { collections },
+      profile: { collections, nfts },
     },
   } = useSelector((state) => state.appSlice);
   return (
@@ -23,9 +23,8 @@ export const ArtistTab = ({ name, currentTab, setCurrentTab }) => {
       </div>
       <div className="px-2.5 py-[.3125rem] bg-zinc-500 rounded-2xl justify-start items-center gap-2.5 flex">
         <div className="text-white text-[.6rem] lg:text-[1rem] font-normal leading-snug">
-          {name === "Collection" || name === "Created"
-            ? collections.length
-            : 302}
+          {name === "Collection" && collections.length}
+          {(name === "Created" || name === "Owned") && nfts.length}
         </div>
       </div>
     </div>

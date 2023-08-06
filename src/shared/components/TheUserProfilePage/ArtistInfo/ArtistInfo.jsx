@@ -38,6 +38,15 @@ export const ArtistInfo = () => {
         <div
           className={`flex gap-[20px] items-center ${classes.WalletDetails}`}
         >
+          <div
+            className="w-[166px] h-[60px] bg-purple-500 rounded-2xl justify-center items-center gap-3 inline-flex cursor-pointer"
+            onClick={() => navigate("/create-nft")}
+          >
+            <div className="text-center text-white text-[16px] font-semibold leading-snug">
+              Mint NFT
+            </div>
+          </div>
+
           <div className="w-[186px] h-[60px] px-[50px] bg-purple-500 rounded-2xl justify-center items-center gap-3 inline-flex">
             <div className="w-5 h-5 relative">
               <CopyIcon />

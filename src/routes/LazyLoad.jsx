@@ -5,6 +5,7 @@ export const CreateACcount = lazy(() => import("Containers/CreateACcount"));
 export const CreateNftCollection = lazy(() =>
   import("Containers/CreateNftCollection")
 );
+export const CreateNft = lazy(() => import("Containers/CreateNft"));
 export const WalletConnect = lazy(() => import("Containers/WalletConnect"));
 export const ArtistRankings = lazy(() => import("Containers/Rankings"));
 export const MarketPlace = lazy(() => import("Containers/MarketPlace"));
