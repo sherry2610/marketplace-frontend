@@ -94,6 +94,7 @@ const CreateNftForm = () => {
 
   const onSubmit = async () => {
     try {
+      console.log("mark1");
       setLoading(true);
       // Custom metadata of the NFT, note that you can fully customize this metadata with other properties.
       const metadata = {
@@ -102,24 +103,30 @@ const CreateNftForm = () => {
         image: imageUrl, // URL, IPFS URI, or File object
         // ... Any other metadata you want to include
       };
+      console.log("mark2", metadata);
 
       const signer = await new ethers.providers.Web3Provider(
         window.ethereum
       ).getSigner();
-
+      console.log("mark3", signer);
       const sdk = await ThirdwebSDK.fromSigner(signer, "mumbai", {
         clientId: import.meta.env.VITE_CLIENT_ID, // Use client id if using on the client side, get it from dashboard settings
         secretKey: import.meta.env.VITE_SECRET_KEY, // Use secret key if using on the server, get it from dashboard settings
       });
-
+      console.log("mark4", sdk);
       const contract = await sdk.getContract(contractAddress);
+      console.log("mark5", contract);
       const txResult = await contract.erc721.mint(metadata);
+      console.log("mark6", txResult);
 
       console.log("txResult", txResult);
 
       if (txResult) {
+        console.log("mark7", txResult);
         const data = await txResult.data();
+        console.log("mark8", data);
         const tokenId = txResult.id.toNumber();
+        console.log("mark9", tokenId);
         const newNft = { ...data, tokenId };
         console.log("txResult", newNft);
 
