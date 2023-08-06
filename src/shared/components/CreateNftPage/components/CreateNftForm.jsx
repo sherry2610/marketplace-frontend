@@ -107,12 +107,12 @@ const CreateNftForm = () => {
         image: imageUrl, // URL, IPFS URI, or File object
         // ... Any other metadata you want to include
       };
-      console.log("mark2", metadata);
+      console.log("mark2", { metadata, address });
 
       // const signer = await new ethers.providers.Web3Provider(
       //   window.ethereum
       // ).getSigner();
-      const signer = await provider.getSigner(account);
+      const signer = await provider.getSigner(address);
       console.log("mark3", signer);
       const sdk = await ThirdwebSDK.fromSigner(signer, "mumbai", {
         clientId: import.meta.env.VITE_CLIENT_ID, // Use client id if using on the client side, get it from dashboard settings

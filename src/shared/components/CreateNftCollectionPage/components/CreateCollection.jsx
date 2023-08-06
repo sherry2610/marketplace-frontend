@@ -74,12 +74,12 @@ const CreateCollection = () => {
         image: imageUrl, // Image to use for the contract
       };
 
-      console.log("contractPayload", contractPayload);
+      console.log("contractPayload", { contractPayload, address });
 
       // const signer = await new ethers.providers.Web3Provider(
       //   window.ethereum
       // ).getSigner();
-      const signer = await provider.getSigner(account);
+      const signer = await provider.getSigner(address);
 
       const sdk = await ThirdwebSDK.fromSigner(signer, "mumbai", {
         clientId: import.meta.env.VITE_CLIENT_ID, // Use client id if using on the client side, get it from dashboard settings
