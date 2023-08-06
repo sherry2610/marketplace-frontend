@@ -25,6 +25,10 @@ const initialData = {
   imageUrl: "",
 };
 
+const provider = new ethers.providers.JsonRpcProvider(
+  "https://polygon-mumbai.infura.io/v3/4458cf4d1689497b9a38b1d6bbf05e78"
+);
+
 const CreateCollection = () => {
   const addressFromThirdWeb = useAddress();
 
@@ -72,9 +76,10 @@ const CreateCollection = () => {
 
       console.log("contractPayload", contractPayload);
 
-      const signer = await new ethers.providers.Web3Provider(
-        window.ethereum
-      ).getSigner();
+      // const signer = await new ethers.providers.Web3Provider(
+      //   window.ethereum
+      // ).getSigner();
+      const signer = await provider.getSigner(account);
 
       const sdk = await ThirdwebSDK.fromSigner(signer, "mumbai", {
         clientId: import.meta.env.VITE_CLIENT_ID, // Use client id if using on the client side, get it from dashboard settings
