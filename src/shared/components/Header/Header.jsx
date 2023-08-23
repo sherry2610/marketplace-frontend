@@ -98,16 +98,33 @@ export const Header = () => {
           </div>
         </Link>
 
-        <Link
-          to={`/create-account`}
-          className="cursor-pointer inline-flex h-[60px] w-[90%] items-center justify-start gap-3 rounded-2xl bg-purple-500 px-[30px]"
+        {isWalletConnected && isLoggedIn && address && (
+          <Link
+            to={`/user-profile`}
+            className="flex w-full items-center justify-start gap-3 rounded-2xl px-5"
+          >
+            <div className="text-center text-[16px] font-semibold leading-snug text-white">
+              User Profile
+            </div>
+          </Link>
+        )}
+
+        <div
+          onClick={() =>
+            isWalletConnected
+              ? isLoggedIn
+                ? handleLogout()
+                : navigate(`/create-account`)
+              : handleNotConnected()
+          }
+          className="cursor-pointer inline-flex h-[60px] w-[152px] items-center justify-center gap-3 rounded-2xl bg-purple-500 px-[30px]"
         >
           <UserIcon />
 
           <div className="text-center text-[16px] font-semibold leading-snug text-white hover:text-white">
-            Sign Up
+            {isLoggedIn ? "Logout" : "Sign Up"}
           </div>
-        </Link>
+        </div>
       </div>
       <div className="inline-flex h-[100px] w-full items-center justify-between bg-zinc-800 px-[30px] md:px-[50px] py-5">
         <div className="flex items-center justify-start gap-2.5">
