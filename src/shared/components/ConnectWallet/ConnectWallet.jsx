@@ -21,9 +21,14 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { SUCCESS_ICON, WARNING_ICON } from "Root/constants";
 import { setToastData } from "Root/redux/slices/uiSlice";
-import { useAddress, useDisconnect, useMetamask } from "@thirdweb-dev/react";
+import {
+  ConnectWallet,
+  useAddress,
+  useDisconnect,
+  useMetamask,
+} from "@thirdweb-dev/react";
 
-export const ConnectWallet = () => {
+const CustomConnectWallet = () => {
   const connectMetaMask = useMetamask();
   const disconnectWallet = useDisconnect();
   const address = useAddress();
@@ -38,9 +43,9 @@ export const ConnectWallet = () => {
 
   const onConnectMetamask = async () => {
     try {
-      console.log("connectMetaMask", connectMetaMask);
+      // console.log("connectMetaMask", connectMetaMask);
       console.log("address before", address);
-      await connectMetaMask();
+      // await connectMetaMask();
       console.log("address after", address);
       dispatch(setIsIWalletConnected(true));
     } catch (e) {
@@ -49,7 +54,7 @@ export const ConnectWallet = () => {
   };
 
   const deactivateWallet = async () => {
-    await disconnectWallet();
+    // await disconnectWallet();
 
     dispatch(setIsIWalletConnected(false));
 
@@ -93,24 +98,31 @@ export const ConnectWallet = () => {
           </div>
 
           {/*  */}
-          <button
-            onClick={() => {
-              address ? deactivateWallet() : onConnectMetamask();
-            }}
-          >
-            <div className="w-full py-5 md:py-0 md:w-80 h-[72px] pl-10 pr-5 bg-neutral-700 rounded-2xl border border-purple-500 justify-start items-center gap-5 inline-flex">
-              <div className="w-10 h-10 justify-center items-center flex">
-                <div className="w-10 h-10 relative flex-col justify-start items-start flex">
-                  <div className="w-10 h-[37.08px] relative">
-                    <img src={MetamaskLogo} alt="" />
-                  </div>
-                </div>
-              </div>
-              <div className="grow shrink basis-0 text-white text-[22px] font-semibold capitalize leading-loose">
-                Metamask
-              </div>
-            </div>
-          </button>
+          <ConnectWallet
+          // detailsBtn={() => {
+          //   return (
+          //     <button
+          //     // onClick={() => {
+          //     //   address ? deactivateWallet() : onConnectMetamask();
+          //     // }}
+          //     >
+          //       <div className="w-full py-5 md:py-0 md:w-80 h-[72px] pl-10 pr-5 bg-neutral-700 rounded-2xl border border-purple-500 justify-start items-center gap-5 inline-flex">
+          //         <div className="w-10 h-10 justify-center items-center flex">
+          //           <div className="w-10 h-10 relative flex-col justify-start items-start flex">
+          //             <div className="w-10 h-[37.08px] relative">
+          //               <img src={MetamaskLogo} alt="" />
+          //             </div>
+          //           </div>
+          //         </div>
+          //         <div className="grow shrink basis-0 text-white text-[22px] font-semibold capitalize leading-loose">
+          //           Metamask
+          //         </div>
+          //       </div>
+          //     </button>
+          //   );
+          // }}
+          />
+
           {/*  */}
           <button
             onClick={() => {
@@ -154,3 +166,5 @@ export const ConnectWallet = () => {
     </div>
   );
 };
+
+export default CustomConnectWallet;

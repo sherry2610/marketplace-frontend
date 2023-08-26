@@ -1,3 +1,4 @@
+import { useAddress } from "@thirdweb-dev/react";
 import { EnvelopeSimple, LockKey } from "Assets/svgs";
 import { Button } from "Components/Button";
 import { Input } from "Components/Input";
@@ -18,6 +19,7 @@ const initialData = {
 const SignIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const addressFromThirdWeb = useAddress();
   const {
     isWalletConnected,
     user: { address },

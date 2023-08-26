@@ -2,6 +2,7 @@ import {
   ThirdwebSDK,
   getSignerAndProvider,
   useAddress,
+  walletConnect,
 } from "@thirdweb-dev/react";
 import { EnvelopeSimple, LockKey, UserIcon } from "Assets/svgs";
 import { Button } from "Components/Button";
@@ -28,7 +29,7 @@ const initialData = {
 // Read-only mode
 const readOnlySdk = new ThirdwebSDK("mumbai", {
   clientId: import.meta.env.VITE_CLIENT_ID, // Use client id if using on the client side, get it from dashboard settings
-  secretKey: import.meta.env.VITE_SECRET_KEY, // Use secret key if using on the server, get it from dashboard settings
+  // secretKey: import.meta.env.VITE_SECRET_KEY, // Use secret key if using on the server, get it from dashboard settings
 });
 
 // const provider = new ethers.providers.JsonRpcProvider(
@@ -56,7 +57,7 @@ const CreateNftForm = () => {
   const { contractAddress, description, nftName, imageUrl } = formData;
   const [collectionDetails, setCollectionDetails] = useState([]);
   const [dropdownLoading, setDropdownLoading] = useState(false);
-
+  console.log("contractAddress", contractAddress);
   const fetchContractMetadat = async (address) => {
     setDropdownLoading(true);
     if (address) {
@@ -72,11 +73,17 @@ const CreateNftForm = () => {
     setDropdownLoading(false);
   };
 
+  // useEffect(() => {
+  //   setLoading(false);
+  // }, []);
+
   useEffect(() => {
     // getContractDetails(collections[0]);
+    setLoading(false);
     if (collections.length > 0) {
       (async () => {
         setLoading(true);
+
         const allContractsWithDetails = await Promise.all(
           collections.map(async (addr) => {
             return await fetchContractMetadat(addr);
@@ -93,12 +100,13 @@ const CreateNftForm = () => {
   }, []);
 
   const handleChange = (value, key) => {
+    console.log("[key]: value", { [key]: value });
     setFormData({ ...formData, [key]: value });
   };
 
   const onSubmit = async () => {
     try {
-      console.log("mark1");
+      console.log("mark1", formData);
       setLoading(true);
       // Custom metadata of the NFT, note that you can fully customize this metadata with other properties.
       const metadata = {
@@ -109,16 +117,42 @@ const CreateNftForm = () => {
       };
       console.log("mark2", { metadata, address });
 
-      const signer = await new ethers.providers.Web3Provider(
-        window.ethereum
-      ).getSigner();
+      let signer;
+      console.log("window.ethereum before", window?.ethereum);
+      if (window?.ethereum) {
+        console.log("window.ethereum FOUND", window?.ethereum);
+        signer = await new ethers.providers.Web3Provider(
+          window?.ethereum
+        ).getSigner();
+      } else {
+        // Assuming you have a WalletConnect provider instance
+        const walletConnectProvider = readOnlySdk.getProvider(); // Initialize your WalletConnect provider
+        console.log("walletConnectProvider", walletConnectProvider);
+        // Create a Web3Provider instance using the WalletConnect provider
+        const provider = new ethers.providers.Web3Provider(
+          walletConnectProvider
+        );
+        console.log("provider", provider);
+
+        // Get a signer from the Web3Provider
+        signer = provider.getSigner();
+        console.log("signer", signer);
+      }
+
       // const signer = await provider.getSigner(address);
       console.log("mark3", signer);
+
       const sdk = await ThirdwebSDK.fromSigner(signer, "mumbai", {
         clientId: import.meta.env.VITE_CLIENT_ID, // Use client id if using on the client side, get it from dashboard settings
-        secretKey: import.meta.env.VITE_SECRET_KEY, // Use secret key if using on the server, get it from dashboard settings
+        // secretKey: import.meta.env.VITE_SECRET_KEY, // Use secret key if using on the server, get it from dashboard settings
+        // readonlySettings: {
+        //   rpcUrl: "https://polygon-mumbai.infura.io/v3/4458cf4d1689497b9a38b1d",
+        //   chainId: 80001,
+        // },
       });
+
       console.log("mark4", sdk);
+      console.log("contractAddress just after", contractAddress);
       const contract = await sdk.getContract(contractAddress);
       console.log("mark5", contract);
       const txResult = await contract?.erc721?.mint(metadata);
@@ -217,12 +251,17 @@ const CreateNftForm = () => {
           class="w-full h-full bg-white rounded-2xl border border-zinc-500 justify-start items-center inline-flex px-5"
           // onChange={(e) => console.log("col.address", e.target.value)}
           onChange={(e) => handleChange(e.target.value, "contractAddress")}
+          style={{ color: "black" }}
         >
           <option selected>Select contract</option>
 
           {collectionDetails.length > 0 &&
             collectionDetails.map((col) => (
-              <option value={col.address} key={col.address}>
+              <option
+                value={col.address}
+                key={col.address}
+                // style={{ color: "red" }}
+              >
                 {col.name}
               </option>
             ))}

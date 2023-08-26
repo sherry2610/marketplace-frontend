@@ -4,9 +4,11 @@ import { RocketLaunchIcon } from "Assets/svgs";
 import { AnimakidImg, HeroImage } from "Assets/images";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useAddress } from "@thirdweb-dev/react";
 // import { Button } from "Components/Button";
 
 export const HomeHero = () => {
+  const addressFromThirdWeb = useAddress();
   const { isWalletConnected, isLoggedIn } = useSelector(
     (state) => state.appSlice
   );
@@ -25,7 +27,7 @@ export const HomeHero = () => {
         </div>
         <Link
           to={
-            isWalletConnected && isLoggedIn
+            addressFromThirdWeb && isLoggedIn
               ? `create-nft-collection`
               : `/create-account`
           }

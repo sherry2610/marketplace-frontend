@@ -12,6 +12,7 @@ import {
 } from "Assets/svgs";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import { useAddress } from "@thirdweb-dev/react";
 
 export const ArtistInfo = () => {
   const navigate = useNavigate();
@@ -20,9 +21,10 @@ export const ArtistInfo = () => {
     isLoggedIn,
     user: { address, profile },
   } = useSelector((state) => state.appSlice);
+  const addressFromThirdWeb = useAddress();
 
   useEffect(() => {
-    if (!isWalletConnected || !isLoggedIn) {
+    if (!addressFromThirdWeb || !isLoggedIn) {
       navigate("/");
     }
   }, []);

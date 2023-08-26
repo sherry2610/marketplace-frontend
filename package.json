@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "tw": "npx tailwindcss -i ./src/index.css -o ./src/output.css --watch",
     "commit": "git add . && git commit -m \"update\" && git push origin main && git push origin2 main",
     "build": "vite build",

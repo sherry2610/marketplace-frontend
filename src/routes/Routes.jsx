@@ -17,7 +17,11 @@ import { useDispatch } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
 import { useEffect } from "react";
 import { setUser } from "Root/redux/slices/appSlice";
-import { ThirdwebProvider, metamaskWallet } from "@thirdweb-dev/react";
+import {
+  ThirdwebProvider,
+  metamaskWallet,
+  walletConnect,
+} from "@thirdweb-dev/react";
 import { getNetworkName } from "Root/utils/general";
 import { ethers } from "ethers";
 
@@ -94,7 +98,7 @@ export function MainRoutes() {
         // signer={
         //   new ethers.providers.Web3Provider(window.ethereum).getSigner() || {}
         // }
-        supportedWallets={[metamaskWallet()]}
+        supportedWallets={[metamaskWallet(), walletConnect()]}
         clientId={import.meta.env.VITE_CLIENT_ID}
       >
         <Routes>

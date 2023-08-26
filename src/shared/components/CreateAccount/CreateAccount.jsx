@@ -7,17 +7,19 @@ import SignUp from "./components/SignUp";
 import SignIn from "./components/SignIn";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import { useAddress } from "@thirdweb-dev/react";
 
 export const CreateAccount = () => {
   const navigate = useNavigate();
   const [formView, setFormView] = useState("signup");
+  const addressFromThirdWeb = useAddress();
   const {
     isWalletConnected,
     user: { address },
   } = useSelector((state) => state.appSlice);
 
   useEffect(() => {
-    if (!isWalletConnected || !address) {
+    if (!addressFromThirdWeb || !address) {
       navigate("/connect-wallet");
     }
   }, []);
