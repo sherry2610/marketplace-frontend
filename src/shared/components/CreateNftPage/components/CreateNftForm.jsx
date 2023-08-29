@@ -2,6 +2,7 @@ import {
   ThirdwebSDK,
   getSignerAndProvider,
   useAddress,
+  useSigner,
 } from "@thirdweb-dev/react";
 import { EnvelopeSimple, LockKey, UserIcon } from "Assets/svgs";
 import { Button } from "Components/Button";
@@ -36,17 +37,16 @@ const readOnlySdk = new ThirdwebSDK("mumbai", {
 // );
 
 const CreateNftForm = () => {
-  const addressFromThirdWeb = useAddress();
+  const address = useAddress();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const signer = useSigner();
 
   // getSignerAndProvider()
   const {
-    isWalletConnected,
     user: {
-      address,
-      profile: { email, collections, nfts },
+      profile: { name, email, collections, nfts },
     },
   } = useSelector((state) => state.appSlice);
   const accessToken = localStorage.getItem("accessToken");
@@ -101,38 +101,55 @@ const CreateNftForm = () => {
       console.log("mark1");
       setLoading(true);
       // Custom metadata of the NFT, note that you can fully customize this metadata with other properties.
-      const metadata = {
-        name: nftName,
-        description,
-        image: imageUrl, // URL, IPFS URI, or File object
-        // ... Any other metadata you want to include
-      };
+      const metadata = [
+        {
+          name: nftName,
+          description,
+          image: imageUrl, // URL, IPFS URI, or File object
+          // ... Any other metadata you want to include
+        },
+      ];
       console.log("mark2", { metadata, address });
 
-      const signer = await new ethers.providers.Web3Provider(
-        window.ethereum
-      ).getSigner();
+      // const signer = await new ethers.providers.Web3Provider(
+      //   window.ethereum
+      // ).getSigner();
       // const signer = await provider.getSigner(address);
       console.log("mark3", signer);
-      const sdk = await ThirdwebSDK.fromSigner(signer, "mumbai", {
-        clientId: import.meta.env.VITE_CLIENT_ID, // Use client id if using on the client side, get it from dashboard settings
-        secretKey: import.meta.env.VITE_SECRET_KEY, // Use secret key if using on the server, get it from dashboard settings
-      });
+      const sdk = await ThirdwebSDK.fromSigner(
+        signer,
+        "https://rpc-mumbai.maticvigil.com",
+        {
+          clientId: import.meta.env.VITE_CLIENT_ID, // Use client id if using on the client side, get it from dashboard settings
+          secretKey: import.meta.env.VITE_SECRET_KEY, // Use secret key if using on the server, get it from dashboard settings
+        }
+      );
       console.log("mark4", sdk);
-      const contract = await sdk.getContract(contractAddress);
+      const contract = await sdk.getContract(contractAddress, "nft-collection");
       console.log("mark5", contract);
-      const txResult = await contract?.erc721?.mint(metadata);
+      const txResult = await contract?.mint(address, metadata);
       console.log("mark6", txResult);
 
       console.log("txResult", txResult);
 
       if (txResult) {
         console.log("mark7", txResult);
-        const data = await txResult.data();
-        console.log("mark8", data);
         const tokenId = txResult.id.toNumber();
         console.log("mark9", tokenId);
-        const newNft = { ...data, tokenId };
+        const data = await txResult.data(tokenId);
+        console.log("mark8", data);
+        const newNft = {
+          metadata: {
+            description,
+            id: tokenId,
+            image: imageUrl,
+            name: nftName,
+          },
+          tokenId,
+          owner: address,
+          supply: 1,
+          type: "ERC721",
+        };
         console.log("txResult", newNft);
 
         dispatch(
@@ -207,7 +224,7 @@ const CreateNftForm = () => {
     }
   };
 
-  console.log("addressFromThirdWeb", addressFromThirdWeb);
+  console.log("address", address);
 
   return (
     <form className="w-full h-fit flex-col justify-center gap-5 items-start inline-flex">
@@ -218,7 +235,9 @@ const CreateNftForm = () => {
           // onChange={(e) => console.log("col.address", e.target.value)}
           onChange={(e) => handleChange(e.target.value, "contractAddress")}
         >
-          <option selected>Select contract</option>
+          <option selected style={{ color: "black" }}>
+            Select contract
+          </option>
 
           {collectionDetails.length > 0 &&
             collectionDetails.map((col) => (

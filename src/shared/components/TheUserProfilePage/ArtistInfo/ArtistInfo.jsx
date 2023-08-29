@@ -12,17 +12,18 @@ import {
 } from "Assets/svgs";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import { useAddress } from "@thirdweb-dev/react";
 
 export const ArtistInfo = () => {
   const navigate = useNavigate();
+  const address = useAddress();
   const {
-    isWalletConnected,
     isLoggedIn,
-    user: { address, profile },
+    user: { profile },
   } = useSelector((state) => state.appSlice);
 
   useEffect(() => {
-    if (!isWalletConnected || !isLoggedIn) {
+    if (!address || !isLoggedIn) {
       navigate("/");
     }
   }, []);

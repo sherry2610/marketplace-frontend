@@ -2,6 +2,7 @@ import {
   ThirdwebSDK,
   getSignerAndProvider,
   useAddress,
+  useSigner,
 } from "@thirdweb-dev/react";
 import { EnvelopeSimple, LockKey, UserIcon } from "Assets/svgs";
 import { Button } from "Components/Button";
@@ -30,15 +31,14 @@ const initialData = {
 // );
 
 const CreateCollection = () => {
-  const addressFromThirdWeb = useAddress();
+  const address = useAddress();
+  const signer = useSigner();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   // getSignerAndProvider()
   const {
-    isWalletConnected,
     user: {
-      address,
       profile: { email },
     },
   } = useSelector((state) => state.appSlice);
@@ -76,15 +76,19 @@ const CreateCollection = () => {
 
       console.log("contractPayload", { contractPayload, address });
 
-      const signer = await new ethers.providers.Web3Provider(
-        window.ethereum
-      ).getSigner();
+      // const signer = await new ethers.providers.Web3Provider(
+      //   window.ethereum
+      // ).getSigner();
       // const signer = await provider.getSigner(address);
 
-      const sdk = await ThirdwebSDK.fromSigner(signer, "mumbai", {
-        clientId: import.meta.env.VITE_CLIENT_ID, // Use client id if using on the client side, get it from dashboard settings
-        secretKey: import.meta.env.VITE_SECRET_KEY, // Use secret key if using on the server, get it from dashboard settings
-      });
+      const sdk = await ThirdwebSDK.fromSigner(
+        signer,
+        "https://rpc-mumbai.maticvigil.com",
+        {
+          clientId: import.meta.env.VITE_CLIENT_ID, // Use client id if using on the client side, get it from dashboard settings
+          secretKey: import.meta.env.VITE_SECRET_KEY, // Use secret key if using on the server, get it from dashboard settings
+        }
+      );
 
       const txResult = await sdk.deployer.deployBuiltInContract(
         "nft-collection",
@@ -170,7 +174,7 @@ const CreateCollection = () => {
     }
   };
 
-  console.log("addressFromThirdWeb", addressFromThirdWeb);
+  console.log("address", address);
 
   return (
     <form className="w-full h-fit flex-col justify-center gap-5 items-start inline-flex">

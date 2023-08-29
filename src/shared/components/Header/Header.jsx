@@ -23,9 +23,7 @@ export const Header = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isWalletConnected, isLoggedIn } = useSelector(
-    (state) => state.appSlice
-  );
+  const { isLoggedIn } = useSelector((state) => state.appSlice);
 
   const handleLogout = () => {
     window.localStorage.setItem("acccessToken", "");
@@ -98,7 +96,7 @@ export const Header = () => {
           </div>
         </Link>
 
-        {isWalletConnected && isLoggedIn && address && (
+        {isLoggedIn && address && (
           <Link
             to={`/user-profile`}
             className="flex w-full items-center justify-start gap-3 rounded-2xl px-5"
@@ -111,7 +109,7 @@ export const Header = () => {
 
         <div
           onClick={() =>
-            isWalletConnected
+            address
               ? isLoggedIn
                 ? handleLogout()
                 : navigate(`/create-account`)
@@ -161,7 +159,7 @@ export const Header = () => {
             </div>
           </Link>
 
-          {isWalletConnected && isLoggedIn && address && (
+          {isLoggedIn && address && (
             <Link
               to={`/user-profile`}
               className="flex w-[174px] items-center justify-center gap-3 rounded-2xl px-5"
@@ -174,7 +172,7 @@ export const Header = () => {
 
           <div
             onClick={() =>
-              isWalletConnected
+              address
                 ? isLoggedIn
                   ? handleLogout()
                   : navigate(`/create-account`)

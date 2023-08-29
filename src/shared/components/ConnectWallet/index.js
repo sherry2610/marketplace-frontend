@@ -1,1 +1,1 @@
-export { ConnectWallet } from "./ConnectWallet";
+export { CustomConnectWallet as ConnectWallet } from "./ConnectWallet";

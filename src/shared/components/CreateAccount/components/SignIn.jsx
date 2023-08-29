@@ -1,3 +1,4 @@
+import { useAddress } from "@thirdweb-dev/react";
 import { EnvelopeSimple, LockKey } from "Assets/svgs";
 import { Button } from "Components/Button";
 import { Input } from "Components/Input";
@@ -18,10 +19,7 @@ const initialData = {
 const SignIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {
-    isWalletConnected,
-    user: { address },
-  } = useSelector((state) => state.appSlice);
+  const address = useAddress();
 
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState(initialData);
