@@ -39,7 +39,7 @@ export const CreateNftPage = () => {
       </div>
 
       <div className={`px-[30px] md:px-0 w-full md:w-1/2 h-full`}>
-        <div className="w-full h-[691px] py-[100px] flex-col justify-start items-start gap-10 inline-flex">
+        <div className="w-full h-[831px] py-[100px] flex-col justify-start items-start gap-10 inline-flex">
           <div className="w-full text-white text-[51px] font-semibold capitalize leading-10">
             Create NFT
           </div>

@@ -19,6 +19,7 @@ import { useAddress, useMetamask } from "@thirdweb-dev/react";
 export const Header = () => {
   const [open, setOpen] = useState(false);
   // const web3context = useWeb3React();
+  console.log("open", open);
   const address = useAddress();
 
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ export const Header = () => {
   return (
     <div className={`relative `}>
       <div
-        className={`lg:hidden z-[999] top-[-2px] bg-primary-bg fixed h-screen flex flex-col gap-[30px] justify-start items-center ${
+        className={`lg:none z-[999] top-[-2px] bg-primary-bg fixed h-screen flex flex-col gap-[30px] justify-start items-center ${
           open ? classes.open : classes.NavHead
         }`}
       >
